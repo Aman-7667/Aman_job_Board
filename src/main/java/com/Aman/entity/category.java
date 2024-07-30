@@ -18,7 +18,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-  public class category implements Serializable {
+  public class category extends baseclass implements Serializable {
   private static final long serialVersionUID = 46835149772133976L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
