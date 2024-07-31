@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class job extends baseclass implements Serializable {
+public class Job extends baseclass implements Serializable {
 
     private static final long serialVersionUID = 46835149772133975L;
 
