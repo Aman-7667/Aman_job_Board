@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
+
+
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -35,5 +36,5 @@ import java.util.Set;
 
   @JsonIgnore
   @OneToMany(mappedBy = "category", fetch = FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
-  private Set<BatchProperties.Job> jobs=new HashSet<BatchProperties.Job>();
+  private Set<Job> jobs=new HashSet<Job>();
 }
