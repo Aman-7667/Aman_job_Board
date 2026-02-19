@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>bestieee · don't you dare say no 😈</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f9c9e2 0%, #ffd0d0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            margin: 0;
+            touch-action: pan-y pinch-zoom; /* allow vertical scroll but we handle everything */
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 56px;
+            box-shadow: 0 30px 50px rgba(255, 80, 140, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.7) inset;
+            width: 100%;
+            max-width: 440px;
+            padding: 32px 24px 40px 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            transition: 0.2s;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #b13e6b;
+            text-shadow: 3px 3px 0 #fff4b0;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .sub {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #852f54;
+            background: #ffecdd;
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 60px;
+            margin-bottom: 28px;
+            border: 2px solid white;
+            box-shadow: 0 6px 0 #ffb3c6;
+        }
+
+        .question-box {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 48px;
+            padding: 24px 20px 30px 20px;
+            margin-bottom: 18px;
+            border: 2px solid white;
+            box-shadow: 0 8px 0 #ffabc0;
+        }
+
+        .question-text {
+            font-size: 1.9rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #3f2b36;
+            margin-bottom: 32px;
+            min-height: 4rem;
+            padding: 0 8px;
+            word-break: break-word;
+        }
+
+        .button-panel {
+            position: relative;
+            min-height: 130px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        /* base button style */
+        .opt-btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border: none;
+            font-size: 1.8rem;
+            font-weight: 700;
+            border-radius: 120px;
+            background: white;
+            box-shadow: 0 10px 0 #b34b6b, 0 4px 20px rgba(0, 0, 0, 0.1);
+            color: #d44578;
+            letter-spacing: 1px;
+            transition: all 0.08s ease;
+            cursor: pointer;
+            border: 2px solid #ffe6f0;
+            min-width: 140px;
+            text-align: center;
+            touch-action: manipulation;
+            pointer-events: auto;
+            position: relative;
+            z-index: 10;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* yes button – stays chill */
+        .btn-yes {
+            background: #fff0d7;
+            color: #aa3d65;
+            box-shadow: 0 10px 0 #a14f6a, 0 4px 12px #ff99bb;
+        }
+
+        /* no button – absolute chaos */
+        .btn-no {
+            background: #ffe0f0;
+            color: #b84c74;
+            box-shadow: 0 10px 0 #b35f7a, 0 4px 12px #fbaac3;
+            position: static; /* but will be toggled to absolute in js */
+            transition: left 0.08s ease, top 0.08s ease, right 0.08s ease;
+            will-change: left, top;
+            z-index: 50;
+        }
+
+        .btn-no:active {
+            transform: scale(0.97);
+            box-shadow: 0 6px 0 #b35f7a;
+        }
+
+        /* area where the no button runs */
+        .escape-area {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 130px;
+        }
+
+        .counter-msg {
+            background: #ffd7e4;
+            border-radius: 100px;
+            padding: 14px 18px;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #771f46;
+            border: 2px dashed white;
+            margin-top: 20px;
+            box-shadow: 0 4px 0 #fbb0c0;
+        }
+
+        .footer-heart {
+            font-size: 2rem;
+            margin-top: 12px;
+            filter: drop-shadow(0 6px 0 #ff90b5);
+        }
+
+        /* make buttons stack nicely on small widths */
+        @media (max-width: 420px) {
+            .question-text { font-size: 1.6rem; }
+            .opt-btn { font-size: 1.5rem; padding: 14px 20px; min-width: 120px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card" id="mainCard">
+        <h1>hey bestieee 💖</h1>
+        <div class="sub">u can't escape the truth</div>
+
+        <div class="question-box" id="questionBox">
+            <div class="question-text" id="questionDisplay">Do you miss me?</div>
+            <div class="button-panel" id="buttonPanel">
+                <!-- YES button - normal relative -->
+                <button class="opt-btn btn-yes" id="yesBtn" aria-label="yes">YES 💘</button>
+                <!-- NO button - will be moved around -->
+                <button class="opt-btn btn-no" id="noBtn" aria-label="no">NO 🙅‍♀️</button>
+            </div>
+        </div>
+
+        <div class="counter-msg" id="counterMsg">
+            😏 don't even try to click NO
+        </div>
+        <div class="footer-heart">✨ 💕 ✨</div>
+    </div>
+
+    <script>
+        (function() {
+            // Flirty question list – each one is a string
+            const questions = [
+                "Do you miss me?",
+                "Am I your favourite?",
+                "Do you think about me?",
+                "Would you hug me rn?",
+                "Am I the cutest?",
+                "Do you <3 me more than pizza?",
+                "would you share dessert with me?",
+                "Do you like me? a lil?",
+                "Besties forever?",
+                "Do you adore me?"
+            ];
+
+            // DOM elements
+            const questionEl = document.getElementById('questionDisplay');
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const counterMsg = document.getElementById('counterMsg');
+            const buttonPanel = document.getElementById('buttonPanel');
+            const mainCard = document.getElementById('mainCard'); // just for extra context
+
+            // state
+            let currentQuestionIndex = 0;
+            let noClickCount = 0;
+            // we store panel dimensions and button dimensions to keep noBtn inside
+            let panelRect = { width: 0, height: 0, left: 0, top: 0 };
+            let noBtnRect = { width: 140, height: 70 }; // fallback, will be updated
+
+            // maximum attempts to place button without overlapping yes completely (but it's okay)
+            const MARGIN = 10;
+
+            // Function to update question
+            function updateQuestion(index) {
+                if (index < questions.length) {
+                    questionEl.textContent = questions[index];
+                } else {
+                    // loop back to start – surprise!
+                    currentQuestionIndex = 0;
+                    questionEl.textContent = questions[0];
+                }
+            }
+
+            // Initially set question
+            updateQuestion(0);
+
+            // ---- HELPER: fresh panel & button measurements ----
+            function refreshRects() {
+                if (!buttonPanel) return;
+                const panel = buttonPanel.getBoundingClientRect();
+                panelRect = {
+                    width: panel.width,
+                    height: panel.height,
+                    left: panel.left,
+                    top: panel.top,
+                    right: panel.right,
+                    bottom: panel.bottom
+                };
+
+                // ensure noBtn is not display:none, get dimensions
+                const noStyle = window.getComputedStyle(noBtn);
+                // we ignore margin in movement, but we care about width/height including padding/border
+                // getBoundingClientRect gives exact
+                if (noBtn) {
+                    const noRect = noBtn.getBoundingClientRect();
+                    noBtnRect = {
+                        width: noRect.width,
+                        height: noRect.height
+                    };
+                }
+            }
+
+            // --- Function to move "no" button to a random position inside panel, but fully visible ---
+            function moveNoButton() {
+                if (!buttonPanel || !noBtn) return;
+
+                // Ensure button is absolutely positioned inside panel
+                noBtn.style.position = 'absolute';
+                noBtn.style.bottom = 'auto';
+                noBtn.style.right = 'auto';
+                // We set left/top based on panel
+
+                // Force panel to be position:relative (if not already)
+                buttonPanel.style.position = 'relative';
+                buttonPanel.style.minHeight = '130px'; // keep height stable
+
+                // get current dimensions
+                refreshRects();
+
+                // if panel width is zero maybe not ready, fallback
+                if (panelRect.width < 20) {
+                    // try again with small delay
+                    setTimeout(() => {
+                        refreshRects();
+                        performMove();
+                    }, 10);
+                    return;
+                }
+                performMove();
+
+                function performMove() {
+                    // available width and height inside panel (subtract button size)
+                    const panelW = panelRect.width;
+                    const panelH = panelRect.height;
+
+                    const btnW = noBtnRect.width;
+                    const btnH = noBtnRect.height;
+
+                    // ensure button not bigger than panel (shouldn't happen)
+                    if (btnW >= panelW - MARGIN*2 || btnH >= panelH - MARGIN*2) {
+                        // fallback: just put somewhere
+                        noBtn.style.left = '10px';
+                        noBtn.style.top = '10px';
+                        return;
+                    }
+
+                    // max left so that button stays inside panel (left relative to panel)
+                    const maxLeft = panelW - btnW - MARGIN;
+                    const minLeft = MARGIN;
+                    const maxTop = panelH - btnH - MARGIN;
+                    const minTop = MARGIN;
+
+                    // random positions
+                    let left = Math.random() * (maxLeft - minLeft) + minLeft;
+                    let top = Math.random() * (maxTop - minTop) + minTop;
+
+                    // make sure they're numbers within bounds
+                    left = Math.min(maxLeft, Math.max(minLeft, left));
+                    top = Math.min(maxTop, Math.max(minTop, top));
+
+                    // apply relative to panel (px)
+                    noBtn.style.left = left + 'px';
+                    noBtn.style.top = top + 'px';
+
+                    // ensure z-index high so it's clickable
+                    noBtn.style.zIndex = '50';
+                }
+            }
+
+            // ---- make sure button goes back to 'absolute' mode and move ----
+            function handleNoClick(e) {
+                e.preventDefault?.();
+                e.stopPropagation?.();
+
+                // increment no count
+                noClickCount++;
+                if (noClickCount === 1) {
+                    counterMsg.textContent = "🙄 u really tried?";
+                } else if (noClickCount === 2) {
+                    counterMsg.textContent = "stop it bestie, say YES 😤";
+                } else if (noClickCount === 3) {
+                    counterMsg.textContent = "I'm literally blushing, say YES!";
+                } else if (noClickCount === 4) {
+                    counterMsg.textContent = "OK NOW you're just teasing 🙈";
+                } else if (noClickCount >= 5) {
+                    counterMsg.textContent = "I'll never give up, click YES 💘";
+                }
+
+                // Move NO button to another random place
+                moveNoButton();
+
+                // For mobile: also maybe vibrate if supported (optional, but funny)
+                if (navigator.vibrate) navigator.vibrate(20);
+
+                return false;
+            }
+
+            // ---- Yes click handler ----
+            function handleYesClick(e) {
+                // move to next question, reset no button position and counter
+                currentQuestionIndex++;
+                if (currentQuestionIndex >= questions.length) {
+                    currentQuestionIndex = 0; // loop around
+                }
+                questionEl.textContent = questions[currentQuestionIndex];
+
+                // reset no click count and message
+                noClickCount = 0;
+                counterMsg.textContent = "😏 don't even try to click NO";
+
+                // Reset no button to a predictable spot? better to put it back to roughly initial (static-ish)
+                // but keep absolute positioning? We'll put it near right side but inside
+                // We'll set left: auto, top: auto -> but since absolute, it will go to (0,0) relative to panel. That's fine.
+                // But we want to reset to a standard location – right side? Let's set left: 55% and top: 20px (if space)
+                if (noBtn) {
+                    // we need panel width known
+                    refreshRects();
+                    const panelW = panelRect.width;
+                    const btnW = noBtnRect.width;
+                    // default position near right side but not overlapping yes (approx)
+                    let setLeft = panelW - btnW - 25;
+                    if (setLeft < 10) setLeft = panelW - btnW - 10;
+                    if (setLeft < 0) setLeft = 20; // fallback
+                    noBtn.style.left = setLeft + 'px';
+                    noBtn.style.top = '20px'; // put at top area
+                }
+
+                // Ensure button stays absolute but with new coords
+                noBtn.style.position = 'absolute';
+                buttonPanel.style.position = 'relative';
+
+                // Bonus: animate happiness
+                yesBtn.style.transform = 'scale(1.1)';
+                setTimeout(() => yesBtn.style.transform = 'scale(1)', 150);
+            }
+
+            // ---- attach events ----
+            // No button: click and touch
+            noBtn.addEventListener('click', handleNoClick);
+            noBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // avoid double events, but we also call handleNoClick
+                handleNoClick(e);
+            }, { passive: false });
+
+            // Yes button: next question
+            yesBtn.addEventListener('click', handleYesClick);
+            yesBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleYesClick(e);
+            }, { passive: false });
+
+            // ---- initialize positioning: set noBtn absolute with a decent start ----
+            function initialNoPlacement() {
+                buttonPanel.style.position = 'relative';
+                noBtn.style.position = 'absolute';
+                refreshRects();
+                // place it on the right side initially
+                if (panelRect.width > 0) {
+                    const panelW = panelRect.width;
+                    const btnW = noBtnRect.width || 120; // fallback
+                    let leftPos = panelW - btnW - 20;
+                    if (leftPos < 10) leftPos = 20;
+                    noBtn.style.left = leftPos + 'px';
+                    noBtn.style.top = '20px';
+                } else {
+                    // fallback values
+                    noBtn.style.left = '180px';
+                    noBtn.style.top = '20px';
+                }
+            }
+
+            // call after a tiny delay to let DOM render
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    initialNoPlacement();
+                }, 30);
+            });
+
+            // also on resize/orientation change, re-place no button to stay inside panel (if it's not being clicked)
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    if (noBtn) {
+                        // if no button is absolute, we should adjust to keep it inside new panel
+                        refreshRects();
+                        const currentLeft = parseFloat(noBtn.style.left) || 0;
+                        const currentTop = parseFloat(noBtn.style.top) || 0;
+                        const btnW = noBtnRect.width;
+                        const btnH = noBtnRect.height;
+                        const panelW = panelRect.width;
+                        const panelH = panelRect.height;
+
+                        let newLeft = currentLeft;
+                        let newTop = currentTop;
+
+                        // clamp if out of bounds
+                        if (newLeft + btnW > panelW - MARGIN) newLeft = panelW - btnW - MARGIN;
+                        if (newLeft < MARGIN) newLeft = MARGIN;
+                        if (newTop + btnH > panelH - MARGIN) newTop = panelH - btnH - MARGIN;
+                        if (newTop < MARGIN) newTop = MARGIN;
+
+                        noBtn.style.left = newLeft + 'px';
+                        noBtn.style.top = newTop + 'px';
+                    }
+                }, 100);
+            });
+
+            // extra: for any tap on no, ensure we move again (already called)
+            // also move no button when user tries to click on it – that's handleNoClick
+
+            // make entire card safe from zoom
+            document.body.addEventListener('touchmove', (e) => {
+                // allow subtle vertical but prevent pull-to-refresh if possible (just cosmetic)
+            }, { passive: true });
+
+            // Additionally, move the no button preemptively if the user gets close? but we only move on click/touch.
+            // That's the assignment: when she try to click any option against me then option move.
+            // For "against me" means clicking no, so we move on no click.
+            // For extra sneakiness: if you press and drag towards no, it won't move until click. It's funnier.
+            // But we also want it to be hard on mobile. So we're good.
+
+            // To handle initial orientation, also call after small interval
+            setTimeout(() => {
+                initialNoPlacement();
+            }, 100);
+        })();
+    </script>
+</body>
+</html>
